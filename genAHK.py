@@ -26,7 +26,7 @@ def read_two_column_csv(path: Path) -> list[tuple[str, str]]:
     return rows
 
 
-def generate_include_ahk(modifier: str = "vk1C") -> None:
+def generate_include_ahk(num_modifier: str = "vk1D", symbol_modifier: str = "vk1C") -> None:
     num = read_two_column_csv(NUM_CSV)
     num_symbol = read_two_column_csv(NUM_SYMBOL_CSV)
 
@@ -34,12 +34,12 @@ def generate_include_ahk(modifier: str = "vk1C") -> None:
 
     for c in range(len(num)):
         lines.append(
-            f'{modifier} & {num[c][0]}:: Send("{{Blind}}{{NumPad{num[c][1]}}}")\n'
+            f'{num_modifier} & {num[c][0]}:: Send("{{U+{ord(num[c][1]):04X}}}")\n'
         )
 
     for c in range(len(num_symbol)):
         lines.append(
-            f'{modifier} & {num_symbol[c][0]}:: Send("{{U+{num_symbol[c][1]}}}")\n'
+            f'{symbol_modifier} & {num_symbol[c][0]}:: Send("{{U+{num_symbol[c][1]}}}")\n'
         )
 
     OUTPUT_FILE.write_text("".join(lines), encoding="utf-8")
